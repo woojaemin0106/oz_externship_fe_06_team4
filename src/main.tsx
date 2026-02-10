@@ -1,26 +1,30 @@
-import { StrictMode } from 'react'
-
-import { createRoot } from 'react-dom/client'
-
+// src/main.tsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import App from './App'
 import './index.css'
-import App from './App.tsx'
 
 async function enableMocking() {
-  if (process.env.NODE_ENV !== 'development') {
-    // 개발 모드인 경우에는 워커 실행 X
-    return
-  }
-  const { worker } = await import('./mocks/browser.ts') // 이전에 설정한 브라우저 환경설정 import
-
-  return worker.start({
-    onUnhandledRequest: 'bypass', // 모킹되지 않은 요청은 실제 서버로 전달
-  })
+  return
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 enableMocking().then(() => {
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
   )
 })
