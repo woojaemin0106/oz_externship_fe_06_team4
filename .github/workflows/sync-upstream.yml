@@ -15,6 +15,7 @@ jobs:
       - name: Checkout Personal Repo (develop)
         uses: actions/checkout@v4
         with:
+          repository: woojaemin0106/oz_externship_fe_06_team4
           ref: develop
           fetch-depth: 0
 
